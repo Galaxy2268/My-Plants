@@ -9,7 +9,7 @@ data class Plant(
     val picture: String,
     val daysToWater: Int?,
     val neededWater: Int?,
-    @PrimaryKey val id: Int? = null
+    @PrimaryKey(autoGenerate = true) val id: Int = 0
 )
 
 class InvalidPlantException(message: String) : Exception(message)
