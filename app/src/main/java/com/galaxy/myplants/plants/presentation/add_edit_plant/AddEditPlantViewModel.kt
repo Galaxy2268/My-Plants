@@ -1,0 +1,80 @@
+package com.galaxy.myplants.plants.presentation.add_edit_plant
+
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.galaxy.myplants.plants.domain.model.InvalidPlantException
+import com.galaxy.myplants.plants.domain.model.Plant
+import com.galaxy.myplants.plants.domain.use_case.PlantUseCases
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+class AddEditPlantViewModel@Inject constructor(
+    private val plantUseCases: PlantUseCases,
+    savedStateHandle: SavedStateHandle
+):ViewModel() {
+
+    private val _plantName = mutableStateOf("")
+    val plantName: State<String> = _plantName
+
+    private val _image = mutableStateOf("")
+    val image: State<String> = _image
+
+    private val _daysToWater = mutableStateOf("")
+    val daysToWater: State<String> = _daysToWater
+
+    private val _neededWater = mutableStateOf("")
+    val neededWater: State<String> = _neededWater
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    private var currentPlantId: Int = 0
+
+    init {
+        savedStateHandle.get<Int>("id")?.let {id ->
+            if(id != 0){
+                viewModelScope.launch {
+                    plantUseCases.getPlantUseCase(id)?.also {plant ->
+                        currentPlantId = plant.id
+                        _plantName.value = plant.name
+                        _image.value = plant.image
+                        _daysToWater.value = plant.daysToWater.toString()
+                        _neededWater.value = plant.neededWater.toString()
+                    }
+                }
+            }
+        }
+
+    }
+
+    public fun addPlant(){
+        viewModelScope.launch {
+            try {
+                plantUseCases.addPlantUseCase(
+                    Plant(
+                        name = plantName.value,
+                        image = image.value,
+                        daysToWater = daysToWater.value.toInt(),
+                        neededWater = neededWater.value.toInt(),
+                        id = currentPlantId
+                    )
+                )
+                _eventFlow.emit(UiEvent.SaveNote)
+            }catch (e: InvalidPlantException){
+                _eventFlow.emit(UiEvent.ShowSnackBar(e.message ?: "Unknown error"))
+            }
+        }
+    }
+
+    sealed class UiEvent{
+        data class ShowSnackBar(val message: String): UiEvent()
+        data object SaveNote: UiEvent()
+    }
+}

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -74,6 +75,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation (libs.material)
 
     //Dagger hilt
     implementation(libs.hilt.android)
@@ -100,4 +102,6 @@ dependencies {
 
     //Coil
     implementation(libs.coil.compose)
+    implementation(libs.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 }

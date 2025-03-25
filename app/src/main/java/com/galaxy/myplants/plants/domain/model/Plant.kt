@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class Plant(
     val name: String,
-    val picture: String,
+    val image: String,
     val daysToWater: Int?,
     val neededWater: Int?,
     @PrimaryKey(autoGenerate = true) val id: Int = 0
