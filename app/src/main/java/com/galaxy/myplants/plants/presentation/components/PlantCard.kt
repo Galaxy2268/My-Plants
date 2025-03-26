@@ -61,7 +61,7 @@ fun PlantCard(
                 )
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = "Days to water: ${plant.daysToWater.toString()}",
+                    text = "Till watering: ${plant.daysToWater.toString()} days",
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -77,7 +77,7 @@ fun PlantCard(
                 contentDescription = "Plant Image",
                 modifier = Modifier
                     .height(160.dp)
-                    .width(120.dp)
+                    .width(140.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop,
             )

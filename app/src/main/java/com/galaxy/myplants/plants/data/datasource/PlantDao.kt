@@ -6,11 +6,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.galaxy.myplants.plants.domain.model.Plant
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlantDao {
     @Query("SELECT * FROM plant")
-    suspend fun getPlants(): List<Plant>
+    fun getPlants(): Flow<List<Plant>>
 
     @Query("SELECT * FROM plant WHERE id = :id")
     suspend fun getPlantById(id: Int): Plant?

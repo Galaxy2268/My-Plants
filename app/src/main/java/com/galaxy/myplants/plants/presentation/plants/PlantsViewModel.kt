@@ -8,6 +8,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.galaxy.myplants.plants.domain.model.Plant
 import com.galaxy.myplants.plants.domain.use_case.PlantUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,11 +27,13 @@ class PlantsViewModel @Inject constructor(
 
     private fun getPlants(){
         viewModelScope.launch {
-            _plants.value = plantUseCases.getPlantsUseCase()
+            plantUseCases.getPlantsUseCase().collectLatest  { plants ->
+                _plants.value = plants
+            }
         }
     }
 
-    public fun deletePlant(plant: Plant){
+    fun deletePlant(plant: Plant){
         viewModelScope.launch {
             plantUseCases.deletePlantUseCase(plant)
         }

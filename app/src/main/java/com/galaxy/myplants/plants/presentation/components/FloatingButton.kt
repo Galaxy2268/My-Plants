@@ -19,6 +19,7 @@ fun FloatingButton(
     modifier: Modifier = Modifier
 ){
     FloatingActionButton(
+        modifier = modifier,
         onClick = { onClick() },
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
         contentColor = MaterialTheme.colorScheme.onSecondaryContainer,

@@ -3,9 +3,10 @@ package com.galaxy.myplants.plants.data.repository
 import com.galaxy.myplants.plants.data.datasource.PlantDao
 import com.galaxy.myplants.plants.domain.model.Plant
 import com.galaxy.myplants.plants.domain.repository.PlantRepository
+import kotlinx.coroutines.flow.Flow
 
 class PlantRepositoryImpl(private val dao: PlantDao): PlantRepository {
-    override suspend fun getPlants(): List<Plant> {
+    override fun getPlants(): Flow<List<Plant>> {
         return dao.getPlants()
     }
 

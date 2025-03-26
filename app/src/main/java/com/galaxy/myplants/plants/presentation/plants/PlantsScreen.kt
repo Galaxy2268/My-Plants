@@ -1,6 +1,7 @@
 package com.galaxy.myplants.plants.presentation.plants
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,33 +26,35 @@ fun PlantsScreen(
     modifier: Modifier = Modifier,
     viewModel: PlantsViewModel = hiltViewModel(),
     navController: NavController
-){
-    Column(
-        modifier = modifier.fillMaxSize()
-    ){
-        Box(modifier = Modifier.fillMaxSize()){
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .fillMaxSize()
-            ){
-                items(viewModel.plants.value){plant ->
-                    PlantCard(
-                        plant
-                    )
-                }
+) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = modifier
+                .padding(horizontal = 8.dp)
+                .fillMaxSize()
+        ) {
+            items(viewModel.plants.value) { plant ->
+                PlantCard(
+                    plant = plant,
+                    modifier = Modifier.clickable {
+                        navController.navigate(Screens.PlantScreen(id = plant.id))
+                    }
+                )
             }
-            FloatingButton(
-                onClick = {
-                    navController.navigate(Screens.PlantScreen(id = 0))
-                },
-                icon = Icons.Filled.Add,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.BottomEnd)
-            )
         }
+        FloatingButton(
+            onClick = {
+                navController.navigate(Screens.PlantScreen(id = 0))
+            },
+            icon = Icons.Filled.Add,
+            modifier = Modifier
+                .padding(32.dp)
+                .align(Alignment.BottomEnd)
+        )
     }
+
 }
 

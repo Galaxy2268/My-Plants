@@ -10,11 +10,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.galaxy.myplants.plants.domain.model.InvalidPlantException
 import com.galaxy.myplants.plants.domain.model.Plant
 import com.galaxy.myplants.plants.domain.use_case.PlantUseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class AddEditPlantViewModel@Inject constructor(
     private val plantUseCases: PlantUseCases,
     savedStateHandle: SavedStateHandle
@@ -54,7 +56,7 @@ class AddEditPlantViewModel@Inject constructor(
 
     }
 
-    public fun addPlant(){
+     fun addPlant(){
         viewModelScope.launch {
             try {
                 plantUseCases.addPlantUseCase(
@@ -69,12 +71,32 @@ class AddEditPlantViewModel@Inject constructor(
                 _eventFlow.emit(UiEvent.SaveNote)
             }catch (e: InvalidPlantException){
                 _eventFlow.emit(UiEvent.ShowSnackBar(e.message ?: "Unknown error"))
+            }catch (e: NumberFormatException){
+                _eventFlow.emit(UiEvent.ShowSnackBar("Days, and needed water values must be numbers"))
             }
         }
     }
+
+    fun onNameChange(text: String){
+        _plantName.value = text
+    }
+
+    fun onNeededWaterChange(text: String){
+        _neededWater.value = text
+    }
+
+    fun onDaysToWaterChange(text: String){
+        _daysToWater.value = text
+    }
+
+
+
+
+
 
     sealed class UiEvent{
         data class ShowSnackBar(val message: String): UiEvent()
         data object SaveNote: UiEvent()
     }
+
 }
