@@ -1,12 +1,10 @@
 package com.galaxy.myplants.plants.presentation.add_edit_plant
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.galaxy.myplants.plants.domain.model.InvalidPlantException
 import com.galaxy.myplants.plants.domain.model.Plant
 import com.galaxy.myplants.plants.domain.use_case.PlantUseCases

@@ -2,7 +2,6 @@ package com.galaxy.myplants.plants.presentation.add_edit_plant
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
