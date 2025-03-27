@@ -39,8 +39,11 @@ fun PlantsScreen(
             items(viewModel.plants.value) { plant ->
                 PlantCard(
                     plant = plant,
-                    modifier = Modifier.clickable {
+                    onClick = {
                         navController.navigate(Screens.PlantScreen(id = plant.id))
+                    },
+                    onDelete = {
+                        viewModel.deletePlant(plant)
                     }
                 )
             }

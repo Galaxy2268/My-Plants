@@ -1,5 +1,6 @@
 package com.galaxy.myplants.plants.presentation.add_edit_plant
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,36 +9,29 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.galaxy.myplants.R
 import com.galaxy.myplants.plants.presentation.components.FloatingButton
-import com.galaxy.myplants.plants.presentation.util.Screens
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -45,13 +39,16 @@ fun AddEditPlantScreen(
     modifier: Modifier = Modifier,
     viewModel: AddEditPlantViewModel = hiltViewModel(),
     navController: NavController,
-    snackBarHostState: SnackbarHostState
 
 ) {
+    val maxCharName = 20
+    val maxCharWater = 5
+    val maxCharDays = 2
     val image = viewModel.image.value
     val name = viewModel.plantName.value
     val neededWater = viewModel.neededWater.value
     val daysToWater = viewModel.daysToWater.value
+    val context = LocalContext.current
     val painter = if (image.isNotBlank()) {
         rememberAsyncImagePainter(image)
     } else {
@@ -65,10 +62,12 @@ fun AddEditPlantScreen(
                 is AddEditPlantViewModel.UiEvent.SaveNote -> {
                     navController.navigateUp()
                 }
-                is AddEditPlantViewModel.UiEvent.ShowSnackBar -> {
-                    snackBarHostState.showSnackbar(
-                        message = event.message
-                    )
+                is AddEditPlantViewModel.UiEvent.ShowToast -> {
+                    Toast.makeText(
+                        context,
+                        event.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -100,7 +99,9 @@ fun AddEditPlantScreen(
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
                 value = name,
-                onValueChange = viewModel::onNameChange,
+                onValueChange = {
+                    if(it.length <= maxCharName) viewModel.onNameChange(it)
+                },
                 placeholder = { Text(text = "Give name to it") },
                 label = { Text("Name") },
                 singleLine = true,
@@ -109,9 +110,11 @@ fun AddEditPlantScreen(
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
                 value = daysToWater,
-                onValueChange = viewModel::onDaysToWaterChange,
+                onValueChange = {
+                    if(it.length <= maxCharDays) viewModel.onDaysToWaterChange(it)
+                },
                 placeholder = { Text(text = "How often it needs water?") },
-                label = { Text("days") },
+                label = { Text("days till watering") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,
@@ -121,7 +124,9 @@ fun AddEditPlantScreen(
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
                 value = neededWater,
-                onValueChange = viewModel::onNeededWaterChange,
+                onValueChange = {
+                    if(it.length <= maxCharWater) viewModel.onNeededWaterChange(it)
+                },
                 placeholder = { Text(text = "How much water it needs?") },
                 label = { Text("needed water ml") },
                 singleLine = true,

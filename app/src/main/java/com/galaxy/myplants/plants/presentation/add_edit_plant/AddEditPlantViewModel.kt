@@ -70,9 +70,9 @@ class AddEditPlantViewModel@Inject constructor(
                 )
                 _eventFlow.emit(UiEvent.SaveNote)
             }catch (e: InvalidPlantException){
-                _eventFlow.emit(UiEvent.ShowSnackBar(e.message ?: "Unknown error"))
+                _eventFlow.emit(UiEvent.ShowToast(e.message ?: "Unknown error"))
             }catch (e: NumberFormatException){
-                _eventFlow.emit(UiEvent.ShowSnackBar("Days, and needed water values must be numbers"))
+                _eventFlow.emit(UiEvent.ShowToast("Days, and water values must be numbers"))
             }
         }
     }
@@ -95,7 +95,7 @@ class AddEditPlantViewModel@Inject constructor(
 
 
     sealed class UiEvent{
-        data class ShowSnackBar(val message: String): UiEvent()
+        data class ShowToast(val message: String): UiEvent()
         data object SaveNote: UiEvent()
     }
 

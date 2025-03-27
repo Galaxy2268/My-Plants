@@ -30,10 +30,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyPlantsTheme {
-                val snackBarHostState = remember { SnackbarHostState() }
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    snackbarHost  = {SnackbarHost(snackBarHostState)}
                 ) { innerPadding ->
                     val navController = rememberNavController()
                     NavHost(
@@ -50,7 +48,6 @@ class MainActivity : ComponentActivity() {
                             AddEditPlantScreen(
                                 navController = navController,
                                 modifier = Modifier.padding(innerPadding),
-                                snackBarHostState = snackBarHostState
                             )
                         }
                     }

@@ -11,10 +11,13 @@ class AddPlantUseCase(private val repository: PlantRepository) {
             throw InvalidPlantException("The name can't be empty")
         }
         if (plant.daysToWater == null){
-            throw InvalidPlantException("The daysToWater can't be empty")
+            throw InvalidPlantException("The days till water can't be empty")
         }
         if (plant.neededWater == null){
-            throw InvalidPlantException("The neededWater can't be empty")
+            throw InvalidPlantException("The needed water can't be empty")
+        }
+        if (plant.neededWater == 0 || plant.daysToWater == 0){
+            throw InvalidPlantException("Days, and water values can't be zero")
         }
         repository.insertPlant(plant)
     }
