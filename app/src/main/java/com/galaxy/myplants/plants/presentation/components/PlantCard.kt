@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.galaxy.myplants.R
 import com.galaxy.myplants.plants.domain.model.Plant
@@ -47,11 +48,15 @@ fun PlantCard(
 ){
     val isContextMenuVisible = rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
+
+
     val painter = if (plant.image.isNotBlank()) {
-        rememberAsyncImagePainter(plant.image)
+        rememberAsyncImagePainter(plant.image.toUri())
     } else {
         painterResource(id = R.drawable.plant_placeholder)
     }
+
+
     OutlinedCard(
         modifier
             .combinedClickable(

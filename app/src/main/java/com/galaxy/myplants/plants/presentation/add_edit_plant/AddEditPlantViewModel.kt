@@ -1,7 +1,15 @@
 package com.galaxy.myplants.plants.presentation.add_edit_plant
 
+import android.content.ContentValues
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.FileProvider
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +20,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +46,8 @@ class AddEditPlantViewModel@Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var currentPlantId: Int = 0
+
+    private var currentImageUri = Uri.EMPTY
 
     init {
         savedStateHandle.get<Int>("id")?.let {id ->
@@ -87,8 +99,16 @@ class AddEditPlantViewModel@Inject constructor(
         _daysToWater.value = text
     }
 
+    fun updateImage() {
+        _image.value = currentImageUri.toString()
+    }
 
-
+    fun createFileForImage(context: Context): Uri{
+        val file = File(context.filesDir, "image_${System.currentTimeMillis()}.jpg")
+        val uri = FileProvider.getUriForFile(context,"com.galaxy.myplants.provider", file)
+        currentImageUri = uri
+        return uri
+    }
 
 
 

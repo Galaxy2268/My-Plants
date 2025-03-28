@@ -1,5 +1,8 @@
 package com.galaxy.myplants.plants.presentation.plants
 
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -9,6 +12,7 @@ import com.galaxy.myplants.plants.domain.use_case.PlantUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +40,7 @@ class PlantsViewModel @Inject constructor(
             plantUseCases.deletePlantUseCase(plant)
         }
     }
+
 
 
 }

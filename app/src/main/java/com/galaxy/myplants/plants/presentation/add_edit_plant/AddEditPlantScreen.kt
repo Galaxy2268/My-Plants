@@ -1,6 +1,10 @@
 package com.galaxy.myplants.plants.presentation.add_edit_plant
 
+import android.net.Uri
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +39,9 @@ import coil.compose.rememberAsyncImagePainter
 import com.galaxy.myplants.R
 import com.galaxy.myplants.plants.presentation.components.FloatingButton
 import kotlinx.coroutines.flow.collectLatest
+import androidx.core.net.toUri
+import coil.compose.rememberImagePainter
+import com.galaxy.myplants.plants.presentation.util.deleteFileForImage
 
 @Composable
 fun AddEditPlantScreen(
@@ -43,6 +50,8 @@ fun AddEditPlantScreen(
     navController: NavController,
 
 ) {
+
+    val context = LocalContext.current
     val maxCharName = 20
     val maxCharWater = 5
     val maxCharDays = 2
@@ -50,12 +59,26 @@ fun AddEditPlantScreen(
     val name = viewModel.plantName.value
     val neededWater = viewModel.neededWater.value
     val daysToWater = viewModel.daysToWater.value
-    val context = LocalContext.current
+
     val painter = if (image.isNotBlank()) {
-        rememberAsyncImagePainter(image)
+        rememberAsyncImagePainter(image.toUri())
     } else {
         painterResource(id = R.drawable.plant_placeholder)
     }
+
+    val takeImage = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { isSuccess ->
+            if (isSuccess) {
+                deleteFileForImage(context, image.toUri())
+                viewModel.updateImage()
+            }
+
+        }
+    )
+
+
+
 
 
     LaunchedEffect(key1 = true) {
@@ -95,7 +118,9 @@ fun AddEditPlantScreen(
             )
             Spacer(Modifier.height(8.dp))
             Button(
-                onClick = {},
+                onClick = {
+                    takeImage.launch(viewModel.createFileForImage(context))
+                },
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text("Take picture of your plant!")

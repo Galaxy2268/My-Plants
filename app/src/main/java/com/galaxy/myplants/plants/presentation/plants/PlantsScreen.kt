@@ -12,12 +12,15 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.galaxy.myplants.plants.presentation.components.FloatingButton
 import com.galaxy.myplants.plants.presentation.components.PlantCard
 import com.galaxy.myplants.plants.presentation.util.Screens
+import com.galaxy.myplants.plants.presentation.util.deleteFileForImage
 
 @Composable
 fun PlantsScreen(
@@ -25,6 +28,7 @@ fun PlantsScreen(
     viewModel: PlantsViewModel = hiltViewModel(),
     navController: NavController
 ) {
+    val context = LocalContext.current
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -41,6 +45,7 @@ fun PlantsScreen(
                         navController.navigate(Screens.PlantScreen(id = plant.id))
                     },
                     onDelete = {
+                        deleteFileForImage(context, plant.image.toUri())
                         viewModel.deletePlant(plant)
                     }
                 )
